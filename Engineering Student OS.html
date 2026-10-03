@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>ENGORA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--page:#F5F6F8;--screen:#FFFFFF;--ink:#16181D;--mute:#646A73;--line:#E3E5E9;--field:#F6F7F9;--chip:#EEF0F3;--green:#0E6F33;--gbg:#17B24E;--red:#B42318;--amber:#8A5A00;--blue:#1D5FA8;--btn:#1B1D22;--btnink:#fff;--dim:rgba(20,22,26,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#0B0C0E;--screen:#15171B;--ink:#F2F3F5;--mute:#A0A6AE;--line:#2A2D33;--field:#1C1F24;--chip:#23262C;--green:#5FD38A;--red:#FF8A7D;--amber:#F2C25B;--blue:#8DC2FF;--btn:#F2F3F5;--btnink:#15171B;--dim:rgba(0,0,0,.55)}}
+:root[data-theme="dark"]{--page:#0B0C0E;--screen:#15171B;--ink:#F2F3F5;--mute:#A0A6AE;--line:#2A2D33;--field:#1C1F24;--chip:#23262C;--green:#5FD38A;--red:#FF8A7D;--amber:#F2C25B;--blue:#8DC2FF;--btn:#F2F3F5;--btnink:#15171B;--dim:rgba(0,0,0,.55)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--page);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;color:var(--ink);display:flex;justify-content:center;line-height:1.6}
+.phone{position:relative;width:min(430px,100%);height:100%;background:var(--screen);overflow:hidden;display:flex;flex-direction:column}
+@media (min-width:480px){body{align-items:center}.phone{height:min(840px,100%);border-radius:44px;border:1px solid var(--line);box-shadow:0 30px 60px rgba(20,24,32,.16)}}
+.scroll{flex:1;overflow-y:auto;padding:18px 20px 30px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.top{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.top-actions{display:flex;align-items:center;gap:8px}
+h1{font-size:1.4rem;font-weight:600;margin:0}.sub{color:var(--mute);margin:0 0 14px;font-size:.92rem}
+.name-trigger{display:inline;padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:inherit;line-height:inherit;cursor:inherit}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--chip);border-radius:12px;padding:4px;margin:6px 0 16px}
+.seg button{border:0;background:none;height:40px;font-size:.88rem;border-radius:9px;font:inherit;font-weight:500;color:var(--mute);cursor:pointer}
+.seg button[aria-selected=true]{background:var(--screen);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.alert{border:1.5px solid var(--red);color:var(--red);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-weight:500}
+.item{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:var(--field);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;font:inherit;color:var(--ink);cursor:pointer}
+.grow{flex:1;min-width:0}small{color:var(--mute)}
+.tag{font-size:.85rem;font-weight:600;padding:1px 9px;border-radius:99px;border:1.5px solid currentColor;white-space:nowrap}
+.t-red{color:var(--red)}.t-amber{color:var(--amber)}.t-green{color:var(--green)}.t-blue{color:var(--blue)}.t-mute{color:var(--mute)}
+.subj{margin-bottom:20px}.subj h3{display:flex;justify-content:space-between;font-size:1rem;margin:0 0 6px;font-weight:600}
+.topic{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-top:1px solid var(--line);padding:10px 0;font:inherit;color:var(--ink);text-align:start;cursor:pointer;min-height:44px}
+.topic span:first-child{flex:0 0 38%;font-size:.92rem;overflow-wrap:anywhere}
+.bar{flex:1;height:7px;border-radius:4px;background:var(--chip);overflow:hidden}.bar i{display:block;height:100%;background:var(--gbg)}
+.link{background:none;border:0;color:var(--blue);font:inherit;font-weight:500;padding:0 4px;min-height:44px;cursor:pointer}
+.backup-panel{margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
+.backup-status{display:flex;align-items:center;gap:8px;min-height:34px;margin-bottom:10px;color:var(--mute);font-size:.88rem}
+.backup-status-mark{width:7px;height:7px;flex:none;border-radius:50%;background:var(--mute)}
+.backup-actions{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.backup-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;border:0;border-radius:0;background:transparent;color:var(--blue);font:inherit;font-weight:500;text-decoration:none;cursor:pointer}
+.backup-link svg,.backup-reset svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.backup-actions label.backup-link{margin:0}
+.backup-reset{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin:0;padding:0 4px;border:0;border-radius:0;background:none;color:var(--mute);font:inherit;cursor:pointer}
+.backup-reset:hover{color:var(--ink)}
+.confirm-icon{display:grid;place-items:center;width:48px;height:48px;margin:4px auto 12px;border-radius:50%;background:var(--chip);color:var(--mute)}
+.confirm-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.confirm-copy{max-width:330px;margin:6px auto 0;line-height:1.65}
+.confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.confirm-actions button{min-height:48px;border:1px solid var(--line);border-radius:12px;font:inherit;font-weight:600;cursor:pointer}
+.confirm-cancel{background:var(--chip);color:var(--ink)}
+.confirm-danger{background:color-mix(in srgb,var(--red) 14%,var(--field));border-color:color-mix(in srgb,var(--red) 35%,var(--line))!important;color:var(--red)}
+.cta{display:block;height:52px;padding:0 34px;border-radius:26px;border:0;background:var(--btn);color:var(--btnink);font:inherit;font-weight:500;cursor:pointer;margin:18px auto 0}
+.cta:disabled{opacity:.4}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #2F7BE0;outline-offset:2px}
+.icon{background:var(--chip);border:0;border-radius:50%;width:44px;height:44px;cursor:pointer;color:var(--ink)}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:6px}
+textarea{min-height:170px;resize:vertical}label{font-weight:500;display:block;margin-top:10px}
+.dim{position:fixed;inset:0;background:var(--dim);opacity:0;pointer-events:none;transition:opacity .25s}.dim.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:auto;will-change:transform;max-height:85vh;overflow-y:auto;overflow-x:hidden;background:var(--screen);border-radius:36px 36px 0 0;padding:14px 20px 40px;text-align:center;transform:translateY(105%);transition:transform .25s cubic-bezier(.2,.8,.2,1);-webkit-overflow-scrolling:touch}
+.sheet.on{transform:none}
+.grab{width:52px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 22px}
+.sheet h2{font-size:1.15rem;font-weight:600;margin:12px 0 4px}.sheet p{margin:0;color:var(--mute)}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.chips button,.ch{background:var(--chip);border:1.5px solid transparent;border-radius:10px;font:inherit;font-weight:500;color:var(--ink);cursor:pointer;min-height:52px;padding:8px 12px}
+.chips .rate-choice{display:flex;align-items:center;justify-content:center;gap:8px}
+.rate-icon{display:grid;place-items:center;width:22px;height:22px;flex:none}
+.rate-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rate-easy,.rate-good,.rate-hard,.rate-lost{color:var(--mute)}
+.ch{display:flex;align-items:center;gap:8px;width:100%;text-align:start;margin-top:10px}
+.ch.ok{border-color:var(--green);background:var(--field);color:var(--green)}.ch.no{border-color:var(--red);background:var(--field);color:var(--red)}.ch svg{flex-shrink:0}
+.fx{direction:ltr;text-align:left;background:var(--field);border-radius:8px;padding:6px 10px;margin:6px 0;font-family:ui-monospace,monospace;font-size:.88rem;overflow-x:auto}
+.st{text-align:start}
+.rc{border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:12px;background:var(--field)}
+.rc h3{margin:0 0 6px;font-size:1.05rem}.rc .lq{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.rc .lexp{color:var(--mute);font-size:.9rem;margin:8px 0 0}
+.rc .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.rc .btns button{background:var(--chip);border:0;border-radius:20px;padding:0 14px;min-height:44px;font:inherit;color:var(--ink);cursor:pointer}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0 0 0 0);margin:0;padding:0;border:0}
+.drop{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;border:2px dashed var(--line);background:var(--field);border-radius:16px;padding:22px 14px;margin-top:6px;cursor:pointer;font-weight:400;transition:border-color .2s,background .2s}
+.drop:hover,.drop.over{border-color:var(--gbg);background:var(--chip)}
+.drop.busy{opacity:.6}.drop b{font-weight:600;overflow-wrap:anywhere}
+.vh:focus-visible+.drop{outline:3px solid #2F7BE0;outline-offset:2px}
+.image-upload{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:100%;min-height:176px;padding:18px;margin-top:6px;border:2px dashed var(--line);border-radius:16px;background:var(--field);color:var(--ink);text-align:center;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.image-upload:hover{border-color:var(--green);background:var(--chip)}
+.image-upload.over{border-color:var(--green);background:var(--chip)}
+.image-upload:active{transform:scale(.99)}
+.image-upload .dz-ic{flex:none;width:46px;height:46px;margin:0;color:var(--ink);background:var(--chip)}
+.image-upload-copy{display:flex;min-width:0;flex-direction:column;gap:3px}
+.image-upload-copy b{font-weight:600}
+.image-upload-copy small{font-size:.85rem}
+label.topic-pick-label{display:flex;align-items:center;gap:8px;margin-top:14px;font-weight:600}
+.topic-pick-label small{padding:1px 8px;border-radius:99px;background:var(--chip);font-size:.78rem;font-weight:500}
+.topic-pick{display:flex;align-items:center;gap:10px;min-height:60px;margin-top:6px;padding:7px 10px;border:1px solid var(--line);border-radius:14px;background:var(--field);transition:border-color .2s,box-shadow .2s}
+.topic-pick:focus-within{border-color:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 12%,transparent)}
+.topic-pick-icon{display:grid;flex:none;place-items:center;width:40px;height:40px;border-radius:11px;background:var(--chip);color:var(--green)}
+.topic-pick-icon svg{width:20px;height:20px}
+.topic-pick select{flex:1;min-width:0;width:100%;margin:0;padding:9px 2px;border:0;background:transparent;color:var(--ink);appearance:none;cursor:pointer;outline:0}
+.topic-pick select option{background-color:var(--screen);color:var(--ink)}
+.topic-pick select option:checked{background-color:var(--chip);color:var(--ink)}
+.topic-pick-chevron{display:grid;flex:none;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--chip);color:var(--mute)}
+.topic-pick-chevron svg{width:16px;height:16px}
+.vh:focus-visible+.image-upload{outline:3px solid #2F7BE0;outline-offset:2px}
+.dz-ic{width:46px;height:46px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-size:1.25rem;margin-bottom:4px}
+.dz-ic.ok{background:var(--gbg);color:#fff}
+@media (prefers-reduced-motion:reduce){.sheet,.dim{transition:none}}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="scroll" id="app"></div>
+  <div class="dim" id="dim"></div>
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-live="polite"></section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const KEY="eos-full",THEME_KEY="eos-full-theme",STEPS=[1,3,7,14,30],$=id=>document.getElementById(id);
+const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
+const seed=()=>({name:"",subjects:[]});
+const validState=data=>data&&typeof data.name==="string"&&Array.isArray(data.subjects)&&data.subjects.every(subject=>subject&&typeof subject.n==="string"&&Array.isArray(subject.t)&&subject.t.every(topic=>topic&&typeof topic.n==="string"&&(topic.m==null||(Number.isFinite(topic.m)&&topic.m>=0&&topic.m<=100))&&Number.isInteger(topic.k)&&topic.k>=0&&topic.k<=4&&(topic.due==null||Number.isFinite(topic.due))));
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!validState(S))S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));setSync("محفوظ على الجهاز")}catch(e){setSync("مساحة التخزين ممتلئة؛ نزّل نسخة احتياطية")}};
+let LR=null;try{LR=JSON.parse(localStorage.getItem(KEY+"-lr"))}catch(e){}
+const saveLR=()=>{try{if(LR)localStorage.setItem(KEY+"-lr",JSON.stringify(LR));else localStorage.removeItem(KEY+"-lr");setSync("محفوظ على الجهاز")}catch(e){setSync("مساحة التخزين ممتلئة؛ نزّل نسخة احتياطية")}};
+let syncMsg="محفوظ على الجهاز";
+const setSync=m=>{syncMsg=m;const e=document.getElementById("sync");if(e)e.textContent=m};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let tab="today",Q=null,busy="",picked=null,lectureSubject="Physics",lectureText="",problemText="",problemTopic="",problemImage=null,drawingImage=null;
+const ftype=n=>/\.pdf$/i.test(n)?"PDF":/\.pptx$/i.test(n)?"PowerPoint":/\.docx$/i.test(n)?"Word":"نص";
+const dropHTML=()=>picked?`<span class="dz-ic ok" aria-hidden="true">✓</span><b>${esc(picked.name)}</b><small class="t-mute">${picked.type} · ${picked.info||""}</small><small class="t-mute">اضغط لتغيير الملف</small>`:`<span class="dz-ic" aria-hidden="true">⬆</span><b>ارفع ملف المحاضرة</b><small class="t-mute">PDF · PowerPoint · Word · TXT/MD</small><small class="t-mute">اسحب الملف هنا أو اضغط للاختيار</small>`;
+const all=()=>S.subjects.flatMap((s,si)=>s.t.map((t,ti)=>({s,t,si,ti})));
+const stat=t=>t.m==null?["لم يبدأ","t-mute"]:t.m>=75?["ممتاز","t-green"]:t.m>=45?["متوسط","t-amber"]:["ضعيف","t-red"];
+function mission(){const d=today(),p=x=>x.t.m==null?50:x.t.due<=d?-100+x.t.m:x.t.m;
+  return all().filter(x=>x.t.m==null||x.t.due<=d||x.t.m<50).sort((a,b)=>p(a)-p(b)).slice(0,4)}
+function kind(x){const d=today();
+  if(x.t.m==null)return["تعلّم","جديد","t-blue",30];
+  if(x.t.due<=d)return["مراجعة","مستحقة اليوم","t-red",25];
+  return["تمارين","نقطة ضعف","t-amber",45]}
+const greetingFor=now=>{const hour=now.getHours();return hour>=5&&hour<12?"صباح الخير":hour>=12&&hour<17?"نهارك سعيد":hour>=17||hour<5?"مساء الخير":"أهلًا بيك"};
+const dateFor=now=>now.toLocaleDateString("ar-EG",{weekday:"long",day:"numeric",month:"long"});
+function refreshHeader(now=new Date()){const greeting=$("greeting"),date=$("app-date");if(greeting)greeting.textContent=greetingFor(now);if(date)date.textContent=dateFor(now)}
+function apply(t,r,score){
+  t.m=score==null?Math.max(0,Math.min(100,(t.m??30)+[-10,-5,8,15][r])):(t.m==null?score:Math.round((t.m+score)/2));
+  t.k=r>=2?Math.min(t.k+1,4):0;const d=r>=2?STEPS[t.k]:1;t.due=today()+d;save();return d}
+function render(){
+  const m=mission(),weak=all().filter(x=>x.t.m!=null).sort((a,b)=>a.t.m-b.t.m)[0];
+  const now=new Date(),date=dateFor(now);
+  let h=`<div class="top"><div><h1><span id="greeting">${greetingFor(now)}</span>${S.name?`، `:" "}<bdi dir="auto"><button class="name-trigger" id="profile" aria-label="تعديل الاسم">${S.name?esc(S.name):"أضف اسمك"}</button></bdi></h1><p class="sub" id="app-date">${date}</p></div><div class="top-actions"><button class="icon" id="theme" aria-label="تبديل الوضع الليلي">◐</button></div></div>
+  <div class="seg" role="tablist">${[["today","النهاردة"],["map","المعرفة"],["lec","محاضرة"],["sv","مسائل"]].map(([k,l])=>`<button role="tab" aria-selected="${tab===k}" data-tab="${k}">${l}</button>`).join("")}</div>`;
+  if(tab==="today"){
+    if(weak&&weak.t.m<45)h+=`<div class="alert" role="alert">⚠ أنت متأخر في: ${esc(weak.s.n)} — ${esc(weak.t.n)} (${weak.t.m}%)</div>`;
+    h+=m.length?`<p class="sub">الوقت المخطط: ${m.reduce((a,x)=>a+kind(x)[3],0)} دقيقة</p>`+m.map(x=>{const[k,w,c,min]=kind(x);
+      return `<button class="item" data-go="${x.si}-${x.ti}"><span class="tag ${c}">${k}</span><span class="grow"><b>${esc(x.s.n)}</b> — ${esc(x.t.n)}<br><small>${w} · ${min} دقيقة${x.t.qs?.length?" · كويز جاهز":""}</small></span><span aria-hidden="true">‹</span></button>`}).join(""):`<p>مفيش مهام لسه. أضف مادة من تبويب المعرفة أو حلّل محاضرة.</p>`;
+  }else if(tab==="map"){
+    h+=S.subjects.map((s,si)=>{const k=s.t.filter(t=>t.m!=null),avg=k.length?Math.round(k.reduce((a,t)=>a+t.m,0)/k.length):0;
+      return `<div class="subj"><h3><span>${esc(s.n)}</span><span class="t-mute">${avg}%</span></h3>`+
+      s.t.map((t,ti)=>{const[l,c]=stat(t);return `<button class="topic" data-topic="${si}-${ti}"><span>${esc(t.n)}</span><div class="bar" role="img" aria-label="${t.m??0}%"><i style="width:${t.m??0}%"></i></div><span class="tag ${c}">${l}</span></button>`}).join("")+
+      `<button class="link" data-addt="${si}">+ موضوع جديد</button></div>`}).join("")+`<button class="link" data-adds>+ مادة جديدة</button><section class="backup-panel"><div class="backup-status"><span class="backup-status-mark" aria-hidden="true"></span><p id="sync" role="status" style="margin:0">${esc(syncMsg)}</p></div><div class="backup-actions"><button class="backup-link" id="exp">${ICONS.dl}<span>نسخة احتياطية</span></button><input type="file" id="imp" class="vh" accept=".json"><label class="backup-link" for="imp">${ICONS.up}<span>استرجاع نسخة</span></label><button class="backup-reset" data-reset><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg><span>مسح كل البيانات</span></button></div></section>`;
+  }else if(tab==="sv"){h+=svHTML()}else{
+    h+=`<p class="sub">الصق نص محاضرة، والـ AI يطلّع المواضيع والقوانين وأسئلة كويز ويضيفهم لخريطتك.</p>
+    <label for="subj">المادة</label><input id="subj" value="${esc(lectureSubject)}">
+    <input type="file" id="file" class="vh" accept=".pdf,.pptx,.docx,.txt,.md"><label class="drop" id="drop" for="file">${dropHTML()}</label>
+    <label for="txt">أو الصق نص المحاضرة</label><textarea id="txt" placeholder="الصق نص المحاضرة هنا...">${esc(lectureText)}</textarea>
+    <button class="cta" id="an">حلّل المحاضرة</button><button class="link" id="ex" style="display:block;margin:6px auto 0">جرّب بمثال</button>
+    <p id="status" role="status" class="sub" style="margin-top:12px">${esc(busy)}</p><div id="lr">${lrHTML()}</div>`;
+  }
+  $("app").innerHTML=h;
+}
+let last=null,closeTimer=null;
+const open=html=>{if(closeTimer){clearTimeout(closeTimer);closeTimer=null}if(!$("sheet").classList.contains("on"))last=document.activeElement;$("app").inert=true;$("sheet").innerHTML='<div class="grab"></div>'+html;$("sheet").classList.add("on");$("dim").classList.add("on");$("sheet").scrollTop=0;const f=$("sheet").querySelector("button,input");f&&f.focus({preventScroll:true})};
+const close=()=>{
+  const sh=$("sheet");if(!sh.classList.contains("on"))return;sh.classList.remove("on");
+  $("dim").classList.remove("on");if(closeTimer)clearTimeout(closeTimer);
+  closeTimer=setTimeout(()=>{if(sh.classList.contains("on"))return;sh.innerHTML="";$("app").inert=false;Q=null;if(last&&document.contains(last))last.focus({preventScroll:true});closeTimer=null},250)};
+const BADGE=`<svg width="90" height="90" viewBox="0 0 112 112" aria-hidden="true">${[0,1].map(o=>`<g fill="${o?"#17B24E":"#0B0B0B"}">`+[...Array(9)].map((_,i)=>{const a=i/9*6.2832;return `<circle cx="${56+Math.cos(a)*30+(o?0:3)}" cy="${56+Math.sin(a)*30+(o?0:4)}" r="19"/>`}).join("")+`<circle cx="${56+(o?0:3)}" cy="${56+(o?0:4)}" r="32"/></g>`).join("")}<path d="M36 57l14 14 27-28" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const EZ=id=>`<button class="cta" style="background:var(--chip);color:var(--ink);margin-top:10px" data-ez="${id}">🤔 اشرحلي بالعامية</button>`;
+const done=(title,msg,extra="")=>open(`${BADGE}<h2>${title}</h2><p>${msg}</p>${extra}<button class="cta" data-done>Nice one!</button>`);
+const days=d=>d===1?"بكرة":"بعد "+d+" يوم";
+const T=id=>{if(id[0]==="L"){const t=LR.d.topics[+id.slice(2)];return[{n:LR.subj,src:LR.src},{n:t.name,sum:t.summary,fx:t.formulas,fig:t.figures}]}
+  const[a,b]=id.split("-").map(Number);return[S.subjects[a],S.subjects[a].t[b],a,b]};
+function feedback(id){const[s,t]=T(id);open(`<h2>الجلسة كانت إزاي؟</h2><p>${esc(s.n)} — ${esc(t.n)}</p><div class="chips"><button class="rate-choice" data-r="3,${id}"><span class="rate-icon rate-easy" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><span>سهل</span></button><button class="rate-choice" data-r="2,${id}"><span class="rate-icon rate-good" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><span>كويس</span></button><button class="rate-choice" data-r="1,${id}"><span class="rate-icon rate-hard" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 2.8 19h18.4L12 3z"/><path d="M12 9v4m0 3h.01"/></svg></span><span>صعب</span></button><button class="rate-choice" data-r="0,${id}"><span class="rate-icon rate-lost" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6m0-6-6 6"/></svg></span><span>مفهمتش</span></button></div>`)}
+function detail(id){const[s,t]=T(id),n=t.qs?.length||0;
+  open(`<h2>${esc(t.n)}</h2><p>${esc(s.n)}</p><div class="st">${t.sum?`<p style="margin-top:12px;color:var(--ink)">${esc(t.sum)}</p>`:`<p style="margin-top:12px">مفيش ملخص لسه. حلّل محاضرة عن الموضوع ده.</p>`}${(t.fx||[]).map(f=>`<div class="fx">${esc(f)}</div>`).join("")}${t.fig&&t.fig.length?`<p style="margin-top:10px;color:var(--ink)"><b>من الرسومات:</b></p>`+t.fig.map(f=>`<p style="color:var(--ink)">• ${esc(f)}</p>`).join(""):""}</div>
+  ${n?`<button class="cta" data-quiz="${id}">ابدأ كويز (${n} أسئلة)</button>`:""}${EZ(id)}<button class="cta" style="background:var(--chip);color:var(--ink);margin-top:10px" data-fb="${id}">سجّل جلسة مذاكرة</button>`)}
+function quiz(id){const[,t]=T(id);Q={id,i:0,right:0,qs:t.qs.slice(-5)};showQ()}
+function showQ(){const q=Q.qs[Q.i];
+  open(`<p>سؤال ${Q.i+1} من ${Q.qs.length}</p><h2 class="st" style="margin:10px 0 6px">${esc(q.prompt)}</h2><div class="st">${q.choices.map((c,i)=>`<button class="ch" data-a="${i}">${esc(c)}</button>`).join("")}<p id="exp" hidden style="margin-top:12px;font-size:.92rem">${esc(q.explanation||"")}</p></div><button class="cta" data-next hidden>${Q.i+1<Q.qs.length?"السؤال التالي":"شوف النتيجة"}</button>`)}
+function finish(){const id=Q.id,[,t]=T(id),sc=Math.round(Q.right/Q.qs.length*100),r=sc>=80?3:sc>=50?2:sc>0?1:0,d=apply(t,r,sc);Q=null;render();
+  done(`نتيجتك ${sc}%`,`هنراجع ${esc(t.n)} ${days(d)}`,sc<50?EZ(id):"")}
+function lrHTML(){if(!LR)return"";
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><h2 style="margin:0;font-size:1.1rem">نتيجة التحليل: ${esc(LR.subj)}</h2><button class="link" data-lclear>مسح</button></div>`+
+  LR.d.topics.map((t,ti)=>`<section class="rc"><h3>${esc(t.name)}</h3><p style="margin:0">${esc(t.summary||"")}</p>${(t.formulas||[]).map(f=>`<div class="fx">${esc(f)}</div>`).join("")}`+
+    (t.figures&&t.figures.length?`<p style="margin:10px 0 0"><b>من الرسومات:</b></p>`+t.figures.map(f=>`<p style="margin:2px 0">• ${esc(f)}</p>`).join(""):"")+
+    t.questions.map((q,qi)=>`<div class="lq"><b>${esc(q.prompt)}</b>${q.choices.map((c,ci)=>`<button class="ch" data-lq="${ti}-${qi}-${ci}">${esc(c)}</button>`).join("")}<p class="lexp" hidden>${esc(q.explanation||"")}</p></div>`).join("")+
+    `<div class="btns"><button data-lez="${ti}">🤔 اشرحلي بالعامية</button><button data-ladd="${ti}">+ أضف لخريطة المعرفة</button></div></section>`).join("")}
+function addToMap(ti){const t=LR.d.topics[ti];let sj=S.subjects.find(s=>s.n===LR.subj);if(!sj){sj={n:LR.subj,t:[]};S.subjects.push(sj)}
+  sj.src=LR.src;let y=sj.t.find(z=>z.n===t.name);if(!y){y={n:t.name,m:null,k:0,due:null};sj.t.push(y)}
+  y.sum=t.summary;y.fx=t.formulas||[];y.fig=(t.figures||[]).map(String);y.qs=(y.qs||[]).concat(t.questions).slice(-6);save();
+  done("اتضاف للخريطة",esc(t.name)+" بقى في مواضيع "+esc(LR.subj))}
+let SV=null,DR={};
+const ICONS={ok:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',no:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.4L17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg>',up:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 7 12 3 8 7"/><line x1="12" y1="21" x2="12" y2="3"/></svg>',dl:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="1" x2="12" y2="13"/></svg>',think:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>'};
+const upd=(id,m)=>{const e=$(id);if(e)e.textContent=m};
+const AI_SETUP="شغّل server.mjs واضبط ANTHROPIC_API_KEY في ملف .env لتفعيل المساعد الذكي.";
+const imageTypes=new Set(["image/jpeg","image/png","image/gif","image/webp"]);
+const fileBase64=file=>{if(!imageTypes.has(file.type))return Promise.reject(new Error("الصيغ المدعومة للصور: JPG وPNG وGIF وWEBP."));if(file.size>8*1048576)return Promise.reject(new Error("الحد الأقصى لحجم الصورة 8MB."));return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(",")[1]||"");reader.onerror=()=>reject(new Error("تعذّر قراءة الصورة"));reader.readAsDataURL(file)})};
+function parseAIJSON(text){const clean=text.trim().replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/i,"");try{return JSON.parse(clean)}catch(e){const start=clean.indexOf("{"),end=clean.lastIndexOf("}");if(start<0||end<start)throw e;return JSON.parse(clean.slice(start,end+1))}}
+function aiFailure(error){if(error&&error.code==="not_configured")return AI_SETUP;if(error&&error.status===401)return"مفتاح Anthropic غير صحيح؛ راجعه في ملف .env ثم أعد تشغيل الخادم.";if(error&&error.status===429)return"وصلت لحد الطلبات مؤقتًا؛ انتظر قليلًا ثم أعد المحاولة.";if(error&&error.status>=500)return"خدمة Anthropic لا تستجيب الآن. جرّب بعد قليل.";if(error instanceof SyntaxError)return"وصل رد غير مفهوم من المساعد. أعد المحاولة.";return error&&error.message||"حصل خطأ في الاتصال بالمساعد. جرّب مرة أخرى."}
+async function getAI(){try{const response=await fetch("/api/health"),health=await response.json();if(!response.ok||!health.aiReady)return null}catch(e){return null}
+  const sample=async(prompt,options={})=>{const text=await requestAI(prompt,options);if(options.onText)options.onText({text});return{text}};
+  sample.json=async(prompt,options={})=>parseAIJSON(await requestAI(prompt,{...options,maxTokens:6144}));
+  sample.limits=async()=>({images:{maxCount:6}});return sample}
+async function requestAI(prompt,options={}){const images=await Promise.all((options.images||[]).map(async image=>({mediaType:image.type||"image/jpeg",data:await fileBase64(image)})));
+  const response=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,images,tier:options.modelTier==="quick"?"quick":"standard",maxTokens:options.maxTokens||4096})});
+  const result=await response.json().catch(()=>({}));if(!response.ok){const error=new Error(result.error||"فشل طلب المساعد.");error.code=result.code;error.status=response.status;throw error}return result.text}
+async function getS(id){const x=await getAI();if(!x)upd(id,AI_SETUP);return x}
+const tg=(c,l)=>`<span class="tag ${c}" style="flex:none">${l}</span>`;
+function svHTML(){let h="";if(!SV){setTimeout(()=>{const sd=$("simg-drop"),dd=$("dimg-drop");if(sd)sd.innerHTML=simgHTML();if(dd)dd.innerHTML=dimgHTML()},100)}
+  if(!SV)h+=`<p class="sub">اكتب مسألة أو صوّرها، والـ AI يمشّيك خطوة خطوة ومش بيديك الإجابة قبل ما تحاول.</p>
+    <label for="sp" style="font-weight:500;display:block;margin-top:10px">المسألة</label><textarea id="sp" style="min-height:110px" placeholder="مثلاً: 5 kg block on a 30° incline, μ = 0.2. Find the acceleration.">${esc(problemText)}</textarea>
+    <input type="file" id="simg" class="vh" accept="image/*"><label class="image-upload" for="simg"><span class="dz-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 3.5 11.5h5.25V21h6.5v-9.5h5.25L12 3z"/></svg></span><span class="image-upload-copy"><b>${problemImage?esc(problemImage.name):"ارفع صورة المسألة"}${problemImage?"":" <small>(اختياري)</small>"}</b><small>${problemImage?"اضغط لتغيير الصورة":"PNG · JPG · GIF · WEBP"}</small><small>${problemImage?"":"اسحب الصورة هنا أو اضغط للاختيار"}</small></span></label>
+    <label for="stp" class="topic-pick-label"><span>اربط الحل بموضوع</span><small>اختياري</small></label><div class="topic-pick"><span class="topic-pick-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5v13A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h6"/></svg></span><select id="stp" aria-label="اربط الحل بموضوع"><option value="">— من غير ربط —</option>${all().map(x=>`<option value="${x.si}-${x.ti}" ${problemTopic===x.si+"-"+x.ti?"selected":""}>${esc(x.s.n)} — ${esc(x.t.n)}</option>`).join("")}</select><span class="topic-pick-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"/></svg></span></div>
+    <button class="cta" id="svgo">ابدأ الحل</button><p id="svmsg" role="status" class="sub" style="margin-top:12px"></p>`;
+  else{const p=SV.p,L=a=>(a||[]).map(x=>`<p style="margin:2px 0">• ${esc(x)}</p>`).join("");
+    h+=`<div class="rc"><b>المعطيات</b>${L(p.given)}<b style="display:block;margin-top:8px">المطلوب</b>${L(p.required)}</div>`;
+    if(SV.st===1)h+=`<div class="rc"><b>إيه أول مبدأ هتستخدمه؟</b>${p.principles.map((x,i)=>`<button class="ch" data-sp="${i}">${esc(x)}</button>`).join("")}<p role="status" style="margin:10px 0 0;color:var(--mute)">${esc(SV.msg)}</p></div>`;
+    else{h+=`<div class="rc"><b>المبدأ: ${esc(p.principles[p.correct])}</b><p style="margin:6px 0 0">${esc(p.why||"")}</p>${(p.equations||[]).map(f=>`<div class="fx">${esc(f)}</div>`).join("")}${L(p.assumptions)}</div>`;
+      p.steps.slice(0,SV.i).forEach((x,i)=>h+=`<div class="rc"><b>${tg("t-green","✓ خطوة "+(i+1))} ${esc(x.title)}</b><p style="margin:6px 0 0">${esc(x.solution)}</p></div>`);
+      if(SV.st===2){const x=p.steps[SV.i],last=SV.i+1>=p.steps.length;
+        h+=`<div class="rc"><b>خطوة ${SV.i+1} من ${p.steps.length}: ${esc(x.title)}</b><p>${esc(x.question)}</p>`+(SV.ok?`<p><b>الحل:</b> ${esc(x.solution)}</p><button class="cta" id="svnext">${last?"للإجابة النهائية":"الخطوة اللي بعدها"}</button>`:
+          `<textarea id="sa" aria-label="محاولتك" placeholder="اكتب محاولتك...">${esc(SV.draft||"")}</textarea><div class="btns"><button id="svchk">تحقق</button>${SV.sf>=2?`<button id="svshow">اعرض الحل</button>`:""}</div>`)+`<p id="svmsg" role="status" style="margin:10px 0 0;color:var(--mute)">${esc(SV.msg)}</p></div>`}
+      if(SV.st===3)h+=`<div class="rc"><b>الإجابة النهائية</b>`+(SV.ok?`<p>إجابتك: ${esc(SV.mine||"—")}</p><div class="fx">${esc(p.final)}</div><p>${esc(p.check||"")}</p><button class="cta" id="svdone">سجّل الجلسة</button>`:`<p>اكتب إجابتك بالوحدات قبل ما تشوف الحل.</p><input id="sf" aria-label="إجابتك"><button class="cta" id="svfin">قارن</button>`)+`</div>`}
+    h+=`<button class="link" id="svreset">مسألة جديدة</button>`}
+  return h+`<div id="dr">${drInner()}</div>`}
+function drInner(){const r=DR.r;
+  return `<hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><h2 style="font-size:1.1rem;margin:0 0 4px">مراجعة شيت Drawing</h2><p class="sub">ارفع صورة الشيت والـ AI يراجع الأبعاد والخطوط والإسقاط. مراجعة مساعدة مش حكم هندسي نهائي.</p>
+  <input type="file" id="dimg" class="vh" accept="image/*" aria-label="صورة الشيت"><label class="image-upload" for="dimg"><span class="dz-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 3.5 11.5h5.25V21h6.5v-9.5h5.25L12 3z"/></svg></span><span class="image-upload-copy"><b>${drawingImage?esc(drawingImage.name):"ارفع صورة الشيت"}</b><small>${drawingImage?"اضغط لتغيير الصورة":"PNG · JPG · GIF · WEBP"}</small><small>${drawingImage?"":"اسحب الصورة هنا أو اضغط للاختيار"}</small></span></label><button class="cta" id="drgo" style="display:block;margin:14px auto 0">راجع الشيت الشيت</button><p id="drmsg" role="status" class="sub" style="margin-top:10px">${esc(DR.msg||"")}</p>`+
+  (r?`<div class="rc"><p style="margin:0">${esc(r.summary||"")}</p>`+r.checks.map(c=>`<div style="display:flex;gap:8px;margin-top:10px">${c.status==="ok"?tg("t-green","✓ تمام"):c.status==="warn"?tg("t-amber","⚠ تنبيه"):tg("t-red","✗ مشكلة")}<span>${esc(c.item)}: ${esc(c.note)}</span></div>`).join("")+`</div>`:"")}
+async function svStart(){
+  const t=$("sp").value.trim(),f=$("simg").files[0]||problemImage,tp=$("stp").value;problemText=t;problemTopic=tp;
+  if(t.length<10&&!f)return upd("svmsg","اكتب المسألة أو صوّرها الأول.");
+  const x=await getS("svmsg");if(!x)return;$("svgo").disabled=true;upd("svmsg","بنحل المسألة ونجهّز الخطوات... (ممكن ياخد لحد دقيقة)");
+  try{const lim=await x.limits().catch(()=>null);
+    const p=await x.json(`You are a Socratic engineering tutor (first-year level). Solve this problem carefully, double-checking all arithmetic, and return ONLY JSON:
+{"given":string[],"required":string[],"principles":[4 strings: the correct first principle plus 3 plausible wrong ones, in random order],"correct":0-3,"why":string (Egyptian Arabic, why this principle),"equations":string[],"assumptions":string[],"steps":[{"title":string,"question":string (Egyptian Arabic: what the student should compute or decide),"solution":string (worked explanation with numbers)}],"final":string (final answer with units),"check":string (a sanity check in Egyptian Arabic)}
+Use 3-6 steps. Keep technical terms in English.${f&&lim&&lim.images?" The problem is in the attached image.":""}
+PROBLEM: ${t||"(see image)"}`,f&&lim&&lim.images?{images:[f]}:{});
+    if(!(p&&Array.isArray(p.given)&&Array.isArray(p.required)&&Array.isArray(p.principles)&&p.principles.length===4&&Number.isInteger(p.correct)&&p.correct>=0&&p.correct<4&&Array.isArray(p.steps)&&p.steps.length&&p.steps.every(z=>z.title&&z.question&&z.solution)&&p.final))throw 0;
+    SV={p,st:1,i:0,fails:0,hints:0,sf:0,ok:false,msg:"",topic:tp,draft:""};render()
+  }catch(e){upd("svmsg",aiFailure(e));const b=$("svgo");if(b)b.disabled=false}}
+async function svCheck(){
+  const a=($("sa").value||"").trim();SV.draft=a;if(!a)return upd("svmsg","اكتب محاولتك الأول، حتى لو مش متأكد.");
+  const x=await getS("svmsg");if(!x)return;$("svchk").disabled=true;upd("svmsg","بنراجع محاولتك...");const st=SV.p.steps[SV.i];
+  try{const q=await x.json(`You are a Socratic engineering tutor. Problem: ${SV.p.given.join("; ")} | Required: ${SV.p.required.join("; ")}.
+Step question: ${st.question}
+Reference solution: ${st.solution}
+Student attempt: ${a}
+Judge whether the attempt is essentially correct (ignore formatting and small rounding). Return ONLY JSON {"ok":boolean,"feedback":string}. If not ok, feedback is ONE short hint in Egyptian Arabic that does NOT reveal the answer.`,{modelTier:"quick",cache:false});
+    if(q&&q.ok){SV.ok=true;SV.msg="✓ تمام!"}else{SV.sf++;SV.hints++;SV.msg="❌ "+((q&&q.feedback)||"لسه، راجع الخطوة.")}
+    render()}catch(e){upd("svmsg",aiFailure(e));const b=$("svchk");if(b)b.disabled=false}}
+async function drStart(){
+  const f=$("dimg").files[0]||drawingImage;if(!f)return upd("drmsg","اختار صورة الشيت الأول.");
+  const x=await getS("drmsg");if(!x)return;const lim=await x.limits().catch(()=>null);
+  if(!lim||!lim.images)return upd("drmsg","رفع الصور مش متاح في العرض ده.");
+  $("drgo").disabled=true;upd("drmsg","بنراجع الشيت...");
+  try{const r=await x.json(`You are an engineering drawing instructor reviewing a student's sheet (image attached). Return ONLY JSON {"summary":string (Egyptian Arabic, 2 sentences),"checks":[{"item":string (e.g. Object placement, Dimensions, Line types, Line weights, Projection, Title block, Lettering),"status":"ok"|"warn"|"bad","note":string (short Egyptian Arabic)}]}. Give 6-9 checks. Judge only what is visible, say when something is unclear, and never claim certainty.`,{images:[f]});
+    if(!(r&&Array.isArray(r.checks)&&r.checks.length))throw 0;DR={r};const e=$("dr");if(e)e.innerHTML=drInner()
+  }catch(e){upd("drmsg",aiFailure(e));const b=$("drgo");if(b)b.disabled=false}}
+function ez(id){const[s,t]=T(id);
+  open(`<h2>اشرحلي بالعامية</h2><p>${esc(s.n)} — ${esc(t.n)}</p><div class="st"><label for="why">فيه جزء معين مش فاهمه؟ (اختياري)</label><input id="why" placeholder="مثلاً: ليه بنضرب في cos(theta)؟"></div><button class="cta" data-ezgo="${id}">${t.easy?"اعرض الشرح":"اشرحلي"}</button><div id="ezout" class="st" style="margin-top:16px;white-space:pre-wrap;line-height:1.9" role="status"></div>`)}
+async function ezgo(id,btn){
+  const[s,t]=T(id),out=$("ezout"),q=($("why").value||"").trim(),again=!!btn.dataset.again;
+  if(!q&&t.easy&&!again){out.textContent=t.easy;btn.textContent="اشرح تاني بطريقة أبسط";btn.dataset.again=1;return}
+  const sample=await getAI();
+  if(!sample){out.textContent=AI_SETUP;return}
+  btn.disabled=true;out.textContent="بفكر في أبسط طريقة أشرحلك بيها...";
+  try{
+    const{text}=await sample(`You are a friendly Egyptian engineering tutor. A first-year engineering student did not understand part of a lecture.
+Subject: ${s.n}. Topic: ${t.n}.
+Summary: ${t.sum||"-"}
+Formulas: ${(t.fx||[]).join(" ; ")||"-"}
+Figures: ${(t.fig||[]).join(" ; ")||"-"}
+Lecture excerpt: ${(s.src||"").slice(0,6000)||"-"}
+${q?`The student is confused about exactly this: "${q}". Focus the explanation on it.`:"Explain the whole topic."}
+Write in simple Egyptian colloquial Arabic (عامية مصرية), like a smart friend, no heavy formal language. Structure: 1) the idea in 2 sentences, 2) a real-life analogy, 3) step by step in plain words, 4) one tiny worked example with numbers, 5) one common mistake to avoid. Keep technical terms and formulas in English. About 250 words max. Plain text only, no markdown symbols like ** or #.
+${again?"The student said the previous explanation was still unclear: use a completely different and simpler analogy.":""}`,{cache:false,onText:({text})=>{out.textContent=text}});
+    out.textContent=text;if(!q&&!again){t.easy=text;save()}
+    btn.textContent="اشرح تاني بطريقة أبسط";btn.dataset.again=1;
+  }catch(e){out.textContent=aiFailure(e)}
+  btn.disabled=false}
+const valid=d=>d&&Array.isArray(d.topics)&&d.topics.length&&d.topics.every(t=>t.name&&Array.isArray(t.questions)&&t.questions.length&&t.questions.every(q=>Array.isArray(q.choices)&&q.choices.length===4&&Number.isInteger(q.answerIndex)&&q.answerIndex>=0&&q.answerIndex<4));
+const EX="Work and Energy. Work done by a constant force: W = F d cos(theta), where theta is the angle between force and displacement. Work is a scalar measured in joules. Kinetic energy: KE = (1/2) m v^2. The work-energy theorem: net work equals the change in kinetic energy, W_net = KE_final - KE_initial. Gravitational potential energy near Earth: PE = m g h. If only conservative forces act, mechanical energy is conserved: KE + PE = constant. Power is the rate of doing work: P = W / t, measured in watts. Example: a 2 kg block slides down a frictionless 5 m ramp; at the bottom v = sqrt(2 g h), about 9.9 m/s.";
+const setStatus=m=>{busy=m;const p=$("status");if(p)p.textContent=m};
+let imgs=[];
+const MIME={png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",webp:"image/webp"};
+async function zipImages(z,dir,max){
+  if(!max)return[];const items=[];
+  for(const k of Object.keys(z.files)){const ext=k.split(".").pop().toLowerCase();
+    if(k.startsWith(dir)&&MIME[ext]){const b=await z.file(k).async("blob");if(b.size>8000)items.push({b,t:MIME[ext]})}}
+  items.sort((x,y)=>y.b.size-x.b.size);
+  return items.slice(0,max).map(x=>new Blob([x.b],{type:x.t}))}
+async function pdfImages(pdf,texts,max){
+  if(!max)return[];const sc=[];
+  for(let i=1;i<=texts.length;i++){let v=texts[i-1].length<400?1:0;
+    try{const ops=await(await pdf.getPage(i)).getOperatorList();
+      if(ops.fnArray.some(f=>f===pdfjsLib.OPS.paintImageXObject||f===pdfjsLib.OPS.paintInlineImageXObject))v+=2}catch(e){}
+    sc.push({i,v})}
+  const pick=sc.sort((x,y)=>y.v-x.v||x.i-y.i).slice(0,max).sort((x,y)=>x.i-y.i),out=[];
+  for(const{i}of pick){setStatus(`بنجهّز صفحة ${i} للتحليل البصري...`);
+    const pg=await pdf.getPage(i),w=pg.getViewport({scale:1}).width,v=pg.getViewport({scale:Math.min(2,1100/w)});
+    const c=document.createElement("canvas");c.width=v.width;c.height=v.height;
+    await pg.render({canvasContext:c.getContext("2d"),viewport:v}).promise;
+    const bl=await new Promise(res=>c.toBlob(res,"image/jpeg",.75));if(bl)out.push(bl)}
+  return out}
+async function extract(f,max){
+  const n=f.name.toLowerCase(),buf=await f.arrayBuffer();
+  if(n.endsWith(".pdf")){
+    if(!window.pdfjsLib)throw"lib";
+    pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise,texts=[];
+    for(let i=1;i<=Math.min(pdf.numPages,80);i++){const c=await(await pdf.getPage(i)).getTextContent();texts.push(c.items.map(x=>x.str).join(" "))}
+    return{text:texts.map((t,i)=>`[Page ${i+1}] ${t}`).join("\n").slice(0,20000),im:await pdfImages(pdf,texts,max)}}
+  if(n.endsWith(".docx")){if(!window.mammoth||!window.JSZip)throw"lib";
+    const text=(await mammoth.extractRawText({arrayBuffer:buf})).value;
+    return{text,im:await zipImages(await JSZip.loadAsync(buf),"word/media/",max)}}
+  if(n.endsWith(".pptx")){if(!window.JSZip)throw"lib";
+    const z=await JSZip.loadAsync(buf),ks=Object.keys(z.files).filter(k=>/^ppt\/slides\/slide\d+\.xml$/.test(k)).sort((a,b)=>a.match(/\d+/)[0]-b.match(/\d+/)[0]);let o="";
+    for(const k of ks){const x=new DOMParser().parseFromString(await z.file(k).async("string"),"application/xml");o+="Slide "+k.match(/\d+/)[0]+": "+[...x.getElementsByTagName("a:t")].map(t=>t.textContent).join(" ")+"\n"}
+    return{text:o,im:await zipImages(z,"ppt/media/",max)}}
+  if(/\.(txt|md)$/.test(n))return{text:new TextDecoder().decode(buf),im:[]};
+  throw"type"}
+async function handleFile(f){
+  if(!f)return;
+  if(f.size>20*1048576)return setStatus("الملف أكبر من 20MB.");
+  if(/\.(doc|ppt)$/i.test(f.name))return setStatus("الصيغة القديمة (.doc / .ppt) مش مدعومة. احفظ الملف كـ .docx أو .pptx وارفعه تاني.");
+  setStatus("بنقرا الملف...");const d=$("drop");d&&d.classList.add("busy");
+  try{
+    const sample=await getAI(),lim=sample?await sample.limits().catch(()=>null):null,max=lim&&lim.images?lim.images.maxCount:0;
+    const{text,im}=await extract(f,max),t=text.trim();
+    if(t.length<80&&!im.length)return setStatus("مفيش نص ولا صور اتقرت من الملف. جرّب ملف تاني أو الصق النص.");
+    imgs=im;lectureText=t;$("txt").value=t;
+    picked={name:f.name,type:ftype(f.name),info:`${t.length} حرف${im.length?" + "+im.length+" صورة":""}`};
+    if($("drop"))$("drop").innerHTML=dropHTML();
+    setStatus(`اتقرا الملف: ${t.length} حرف${im.length?" + "+im.length+" صورة/صفحة مرئية هتتحلل كمان":""}${max?"":" (تم استخراج النص؛ تحليل الصور يتطلب إعداد AI)"}. اضغط "حلّل المحاضرة".`)}
+  catch(err){setStatus(err==="type"?"الصيغة مش مدعومة. ارفع PDF أو PPTX أو DOCX.":"معرفتش أقرا الملف. جرّب ملف تاني أو الصق النص.")}
+  finally{d&&d.classList.remove("busy")}}
+document.addEventListener("change",e=>{if(e.target.id==="file")handleFile(e.target.files[0])});
+["dragover","dragleave","drop"].forEach(ev=>document.addEventListener(ev,e=>{const d=e.target.closest&&e.target.closest("#drop");
+  if(!d){if(ev!=="dragleave")e.preventDefault();return}
+  e.preventDefault();d.classList.toggle("over",ev==="dragover");if(ev==="drop")handleFile(e.dataTransfer.files[0])}));
+[
+  "dragover","dragleave","drop"
+].forEach(ev=>document.addEventListener(ev,e=>{const d=e.target.closest&&e.target.closest(".image-upload");if(!d)return;
+  e.preventDefault();d.classList.toggle("over",ev==="dragover");if(ev==="drop"){const input=$(d.htmlFor),files=e.dataTransfer.files;
+    if(input&&files.length){const transfer=new DataTransfer();[...files].forEach(file=>transfer.items.add(file));input.files=transfer.files;input.dispatchEvent(new Event("change",{bubbles:true}))}}}));
+async function analyze(){
+  const text=$("txt").value.trim(),subj=($("subj").value.trim()||"General");
+  const status=m=>{busy=m;const p=$("status");if(p)p.textContent=m};
+  if(text.length<80&&!imgs.length)return status("النص قصير. الصق فقرة أطول أو ارفع ملف.");
+  const sample=await getAI();
+  if(!sample)return status(AI_SETUP);
+  $("an").disabled=true;status("بنحلل المحاضرة... (ممكن ياخد لحد دقيقة)");
+  try{
+    const lim=await sample.limits().catch(()=>null),ims=lim&&lim.images?imgs.slice(0,lim.images.maxCount):[];
+    const d=await sample.json(`You are an engineering teaching assistant. Read this lecture for the subject "${subj}" and return ONLY JSON:
+{"topics":[{"name":string,"summary":string (2 sentences, Egyptian Arabic ok),"formulas":string[],"figures":string[] (one short Arabic description per diagram/figure/table in the lecture that matters for this topic, including values and labels you can read in it),"questions":[{"prompt":string,"choices":[exactly 4 strings],"answerIndex":0-3,"explanation":string}]}]}
+Rules: 2-5 topics, 2 questions per topic testing understanding, keep technical terms in English. Questions must be fully self-contained text: if a question depends on a figure, describe the figure inside the prompt itself.
+${ims.length?`${ims.length} images are attached: they are pages or figures from the lecture, in order. Read them carefully (diagrams, equations, graphs, tables, handwriting) and use their content together with the text.`:""}
+
+LECTURE TEXT:
+${text.slice(0,15000)}`,ims.length?{images:ims}:{});
+    if(!valid(d))throw 0;
+    LR={subj,src:text.slice(0,8000),d};saveLR();
+    busy=`اتحللت! ${d.topics.length} مواضيع${ims.length?" مع تحليل "+ims.length+" صورة":""}. النتيجة تحت.`;render();
+    const el=$("lr");el&&el.scrollIntoView({block:"start"});
+  }catch(e){status(aiFailure(e));const b=$("an");if(b)b.disabled=false}
+}
+document.addEventListener("click",e=>{const g=s=>e.target.closest(s);let x;
+  if(x=g("[data-tab]")){tab=x.dataset.tab;render();$("app").scrollTop=0}
+  else if(g("#theme")){const r=document.documentElement,d=r.dataset.theme==="dark"||(!r.dataset.theme&&matchMedia("(prefers-color-scheme:dark)").matches);r.dataset.theme=d?"light":"dark";try{localStorage.setItem(THEME_KEY,r.dataset.theme)}catch(e){}}
+  else if(g("#profile"))open(`<h2>تعديل الاسم</h2><label for="profile-name">الاسم الظاهر</label><input id="profile-name" maxlength="40" value="${esc(S.name)}" placeholder="اكتب اسمك"><button class="cta" data-profile-save>حفظ</button>`)
+  else if(g("[data-profile-save]")){const name=$("profile-name").value.trim();if(name){S.name=name;save();render();close()}}
+  else if(g("#an"))analyze();
+  else if(g("#ex")){$("txt").value=EX;$("subj").value="Physics";lectureText=EX;lectureSubject="Physics"}
+  else if(x=g("[data-go]")){const[,t]=T(x.dataset.go);t.qs?.length?quiz(x.dataset.go):feedback(x.dataset.go)}
+  else if(x=g("[data-topic]"))detail(x.dataset.topic);
+  else if(x=g("[data-quiz]"))quiz(x.dataset.quiz);
+  else if(x=g("[data-fb]"))feedback(x.dataset.fb);
+  else if(x=g("[data-a]")){const b=x;if(b.parentElement.dataset.d)return;b.parentElement.dataset.d=1;const q=Q.qs[Q.i],c=+b.dataset.a;
+    if(c===q.answerIndex)Q.right++;
+    b.parentElement.querySelectorAll(".ch").forEach((el,i)=>{if(i===q.answerIndex){el.classList.add("ok");el.appendChild(Object.assign(document.createElement("span"),{innerHTML:ICONS.ok}))}else if(el===b){el.classList.add("no");el.appendChild(Object.assign(document.createElement("span"),{innerHTML:ICONS.no}))}});
+    $("exp").hidden=false;$("sheet").querySelector("[data-next]").hidden=false}
+  else if(g("[data-next]")){Q.i++;Q.i<Q.qs.length?showQ():finish()}
+  else if(x=g("[data-r]")){const[r,si,ti]=x.dataset.r.split(/[,-]/).map(Number),t=S.subjects[si].t[ti],d=apply(t,r);render();done("تمام!",`هنراجع ${esc(t.n)} ${days(d)}`,r<=1?EZ(si+"-"+ti):"")}
+  else if(g("#svgo"))svStart();
+  else if(g("#svchk"))svCheck();
+  else if(g("#drgo"))drStart();
+  else if(x=g("[data-sp]")){const i=+x.dataset.sp;if(i===SV.p.correct){SV.st=2;SV.msg=""}else{SV.fails++;SV.hints++;SV.msg=SV.fails>=2?"لسه. ركّز على المطلوب: "+SV.p.required[0]:"❌ لسه. فكّر المسألة بتطلب تحلل إيه."}render()}
+  else if(g("#svshow")){SV.ok=true;SV.hints+=2;SV.msg="";render()}
+  else if(g("#svnext")){SV.i++;SV.ok=false;SV.sf=0;SV.draft="";SV.msg="";if(SV.i>=SV.p.steps.length)SV.st=3;render()}
+  else if(g("#svfin")){SV.mine=$("sf").value.trim();SV.ok=true;render()}
+  else if(g("#svdone")){const r=SV.hints===0?3:SV.hints<=2?2:SV.hints<=4?1:0;let m="خلّصت المسألة"+(SV.hints?` بعد ${SV.hints} تلميح/محاولة`:" من غير تلميحات");
+    if(SV.topic){const[,t]=T(SV.topic),d=apply(t,r);m+=`. هنراجع ${esc(t.n)} ${days(d)}`}SV=null;render();done("برافو!",m)}
+  else if(g("#svreset")){SV=null;problemText="";problemTopic="";problemImage=null;render()}
+  else if(g("#exp")){try{const data=JSON.stringify({version:1,S,LR},null,2),url=URL.createObjectURL(new Blob([data],{type:"application/json"})),a=document.createElement("a");a.href=url;a.download="engora-backup.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);setSync("اتحملت النسخة الاحتياطية")}catch(e){setSync("تعذّر تنزيل النسخة الاحتياطية")}}
+  else if(x=g("[data-lq]")){const[ti,qi]=x.dataset.lq.split("-").map(Number),box=x.parentElement;if(box.dataset.d)return;box.dataset.d=1;const q=LR.d.topics[ti].questions[qi];
+    box.querySelectorAll(".ch").forEach((el,i)=>{if(i===q.answerIndex){el.classList.add("ok");el.appendChild(Object.assign(document.createElement("span"),{innerHTML:ICONS.ok}))}else if(el===x){el.classList.add("no");el.appendChild(Object.assign(document.createElement("span"),{innerHTML:ICONS.no}))}});
+    box.querySelector(".lexp").hidden=false}
+  else if(x=g("[data-lez]"))ez("L-"+x.dataset.lez);
+  else if(x=g("[data-ladd]"))addToMap(+x.dataset.ladd);
+  else if(g("[data-lclear]")){LR=null;saveLR();render()}
+  else if(x=g("[data-ez]"))ez(x.dataset.ez);
+  else if(x=g("[data-ezgo]"))ezgo(x.dataset.ezgo,x);
+  else if(g("[data-reset-cancel]")){close();$("app").scrollTop=0;document.querySelector(".phone").scrollTop=0}
+  else if(g("[data-done]")||g("#dim"))close();
+  else if(x=g("[data-addt]")){const si=x.dataset.addt;open(`<h2>موضوع جديد</h2><p>${esc(S.subjects[si].n)}</p><input id="nm" aria-label="اسم الموضوع" placeholder="مثلاً: Torque"><button class="cta" data-savet="${si}">أضف</button>`)}
+  else if(x=g("[data-savet]")){const v=$("nm").value.trim();if(v){S.subjects[x.dataset.savet].t.push({n:v,m:null,k:0,due:null});save();render();close()}}
+  else if(g("[data-adds]"))open(`<h2>مادة جديدة</h2><input id="nm" aria-label="اسم المادة" placeholder="مثلاً: Statics"><button class="cta" data-saves>أضف</button>`);
+  else if(g("[data-saves]")){const v=$("nm").value.trim();if(v){S.subjects.push({n:v,t:[]});save();render();close()}}
+  else if(g("[data-reset]"))open(`<div class="confirm-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg></div><h2>مسح كل البيانات؟</h2><p class="confirm-copy">سيتم حذف المواد والمواضيع ونتائج تحليل المحاضرات المحفوظة على هذا الجهاز. لا يمكن التراجع عن ذلك.</p><div class="confirm-actions"><button class="confirm-cancel" data-reset-cancel>إلغاء</button><button class="confirm-danger" data-reset-confirm>مسح البيانات</button></div>`)
+  else if(g("[data-reset-confirm]")){S=seed();LR=null;save();saveLR();render();$("app").scrollTop=0;close()}
+});
+document.addEventListener("input",e=>{if(e.target.id==="subj")lectureSubject=e.target.value;else if(e.target.id==="txt")lectureText=e.target.value;else if(e.target.id==="sp")problemText=e.target.value;else if(e.target.id==="stp")problemTopic=e.target.value});
+document.addEventListener("change",async e=>{if(e.target.id==="simg"){problemImage=e.target.files[0]||null;const copy=document.querySelector('label[for="simg"] .image-upload-copy');if(copy&&problemImage){copy.querySelector("b").textContent=problemImage.name;const hints=copy.querySelectorAll("small");if(hints[0])hints[0].textContent="اضغط لتغيير الصورة";if(hints[1])hints[1].textContent="تم اختيار الصورة"}return}
+  if(e.target.id==="dimg"){drawingImage=e.target.files[0]||null;const copy=document.querySelector('label[for="dimg"] .image-upload-copy');if(copy&&drawingImage){copy.querySelector("b").textContent=drawingImage.name;const hints=copy.querySelectorAll("small");if(hints[0])hints[0].textContent="اضغط لتغيير الصورة";if(hints[1])hints[1].textContent="تم اختيار الصورة"}return}
+  if(e.target.id!=="imp"||!e.target.files[0])return;
+  try{const o=JSON.parse(await e.target.files[0].text()),validLR=o.LR==null||(typeof o.LR.subj==="string"&&typeof o.LR.src==="string"&&valid(o.LR.d));if(!validState(o.S)||!validLR)throw 0;S=o.S;LR=o.LR||null;save();saveLR();render();setSync("اتسترجعت النسخة الاحتياطية")}catch(err){setSync("الملف مش نسخة احتياطية صحيحة.")}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+try{const theme=localStorage.getItem(THEME_KEY);if(theme==="light"||theme==="dark")document.documentElement.dataset.theme=theme}catch(e){}
+render();$("app").scrollTop=0;
+setInterval(()=>refreshHeader(),60_000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshHeader()});
+</script>
+</body>
+</html>
