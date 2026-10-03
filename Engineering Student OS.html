@@ -5,6 +5,7 @@
 <title>ENGORA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="env.js"></script>
 <style>
 :root{--page:#F5F6F8;--screen:#FFFFFF;--ink:#16181D;--mute:#646A73;--line:#E3E5E9;--field:#F6F7F9;--chip:#EEF0F3;--green:#0E6F33;--gbg:#17B24E;--red:#B42318;--amber:#8A5A00;--blue:#1D5FA8;--btn:#1B1D22;--btnink:#fff;--dim:rgba(20,22,26,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#0B0C0E;--screen:#15171B;--ink:#F2F3F5;--mute:#A0A6AE;--line:#2A2D33;--field:#1C1F24;--chip:#23262C;--green:#5FD38A;--red:#FF8A7D;--amber:#F2C25B;--blue:#8DC2FF;--btn:#F2F3F5;--btnink:#15171B;--dim:rgba(0,0,0,.55)}}
@@ -146,7 +147,7 @@ function apply(t,r,score){
 function render(){
   const m=mission(),weak=all().filter(x=>x.t.m!=null).sort((a,b)=>a.t.m-b.t.m)[0];
   const now=new Date(),date=dateFor(now);
-  let h=`<div class="top"><div><h1><span id="greeting">${greetingFor(now)}</span>${S.name?`، `:" "}<bdi dir="auto"><button class="name-trigger" id="profile" aria-label="تعديل الاسم">${S.name?esc(S.name):"أضف اسمك"}</button></bdi></h1><p class="sub" id="app-date">${date}</p></div><div class="top-actions"><button class="icon" id="theme" aria-label="تبديل الوضع الليلي">◐</button></div></div>
+  let h=`<div class="top"><div><h1><span id="greeting">${greetingFor(now)}</span>${S.name?`، `:" "}<bdi dir="auto"><button class="name-trigger" id="profile" aria-label="تعديل الاسم">${S.name?esc(S.name):"أضف اسمك"}</button></bdi></h1><p class="sub" id="app-date">${date}</p></div><div class="top-actions"><button class="icon" id="ai-key-btn" aria-label="مفتاح Gemini API" title="مفتاح Gemini API">🤖</button><button class="icon" id="theme" aria-label="تبديل الوضع الليلي">◐</button></div></div>
   <div class="seg" role="tablist">${[["today","النهاردة"],["map","المعرفة"],["lec","محاضرة"],["sv","مسائل"]].map(([k,l])=>`<button role="tab" aria-selected="${tab===k}" data-tab="${k}">${l}</button>`).join("")}</div>`;
   if(tab==="today"){
     if(weak&&weak.t.m<45)h+=`<div class="alert" role="alert">⚠ أنت متأخر في: ${esc(weak.s.n)} — ${esc(weak.t.n)} (${weak.t.m}%)</div>`;
@@ -201,19 +202,65 @@ function addToMap(ti){const t=LR.d.topics[ti];let sj=S.subjects.find(s=>s.n===LR
 let SV=null,DR={};
 const ICONS={ok:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',no:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.4L17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg>',up:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 7 12 3 8 7"/><line x1="12" y1="21" x2="12" y2="3"/></svg>',dl:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="1" x2="12" y2="13"/></svg>',think:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>'};
 const upd=(id,m)=>{const e=$(id);if(e)e.textContent=m};
-const AI_SETUP="شغّل server.mjs واضبط ANTHROPIC_API_KEY في ملف .env لتفعيل المساعد الذكي.";
+/* ─── AI Integration ──────────────────────────────────────────── */
+const GEMINI_BASE="https://generativelanguage.googleapis.com/v1beta";
+const getAIKey=()=>{try{const k=localStorage.getItem("eos-ai-key");if(k&&k.trim())return k.trim();if(window.ENGORA_ENV?.GEMINI_API_KEY)return window.ENGORA_ENV.GEMINI_API_KEY.trim();return""}catch(e){return window.ENGORA_ENV?.GEMINI_API_KEY||""}};
+const AI_SETUP="أدخل مفتاح Gemini API لتفعيل المساعد الذكي.";
 const imageTypes=new Set(["image/jpeg","image/png","image/gif","image/webp"]);
 const fileBase64=file=>{if(!imageTypes.has(file.type))return Promise.reject(new Error("الصيغ المدعومة للصور: JPG وPNG وGIF وWEBP."));if(file.size>8*1048576)return Promise.reject(new Error("الحد الأقصى لحجم الصورة 8MB."));return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(",")[1]||"");reader.onerror=()=>reject(new Error("تعذّر قراءة الصورة"));reader.readAsDataURL(file)})};
-function parseAIJSON(text){const clean=text.trim().replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/i,"");try{return JSON.parse(clean)}catch(e){const start=clean.indexOf("{"),end=clean.lastIndexOf("}");if(start<0||end<start)throw e;return JSON.parse(clean.slice(start,end+1))}}
-function aiFailure(error){if(error&&error.code==="not_configured")return AI_SETUP;if(error&&error.status===401)return"مفتاح Anthropic غير صحيح؛ راجعه في ملف .env ثم أعد تشغيل الخادم.";if(error&&error.status===429)return"وصلت لحد الطلبات مؤقتًا؛ انتظر قليلًا ثم أعد المحاولة.";if(error&&error.status>=500)return"خدمة Anthropic لا تستجيب الآن. جرّب بعد قليل.";if(error instanceof SyntaxError)return"وصل رد غير مفهوم من المساعد. أعد المحاولة.";return error&&error.message||"حصل خطأ في الاتصال بالمساعد. جرّب مرة أخرى."}
-async function getAI(){try{const response=await fetch("/api/health"),health=await response.json();if(!response.ok||!health.aiReady)return null}catch(e){return null}
-  const sample=async(prompt,options={})=>{const text=await requestAI(prompt,options);if(options.onText)options.onText({text});return{text}};
-  sample.json=async(prompt,options={})=>parseAIJSON(await requestAI(prompt,{...options,maxTokens:6144}));
-  sample.limits=async()=>({images:{maxCount:6}});return sample}
-async function requestAI(prompt,options={}){const images=await Promise.all((options.images||[]).map(async image=>({mediaType:image.type||"image/jpeg",data:await fileBase64(image)})));
-  const response=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,images,tier:options.modelTier==="quick"?"quick":"standard",maxTokens:options.maxTokens||4096})});
-  const result=await response.json().catch(()=>({}));if(!response.ok){const error=new Error(result.error||"فشل طلب المساعد.");error.code=result.code;error.status=response.status;throw error}return result.text}
+function parseAIJSON(text){const clean=text.trim().replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/i,"");try{return JSON.parse(clean)}catch(e){const s=clean.indexOf("{"),en=clean.lastIndexOf("}");if(s<0||en<s)throw e;return JSON.parse(clean.slice(s,en+1))}}
+function aiFailure(error){
+  if(error&&error.code==="not_configured")return AI_SETUP;
+  const msg=error&&error.message?error.message:String(error||"خطأ غير معروف");
+  if(error&&error.status===402)return"رصيد غير كافٍ — تحقق من حسابك.";
+  if(error&&(error.status===401||error.status===403))return"مفتاح API غير صحيح — اضغط 🤖 وأدخل مفتاح جديد.";
+  return`خطأ (${error?.status||"?"}): ${msg}`}
+let _geminiModel=null;
+async function resolveGeminiModel(key){
+  if(_geminiModel)return _geminiModel;
+  try{
+    const r=await fetch(`${GEMINI_BASE}/models?key=${key}`);
+    const d=await r.json();
+    if(!r.ok){const e=new Error(d.error?.message||`Key error (${r.status})`);e.status=r.status;throw e}
+    const available=(d.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent")).map(m=>m.name.replace("models/",""));
+    // Prefer flash models, then anything available
+    const flash=available.filter(n=>n.includes("flash")).sort((a,b)=>{
+      // Prefer higher version numbers
+      const ver=n=>{const m=n.match(/(\d+)[\._-](\d+)/);return m?parseFloat(m[1]+"."+m[2]):0};
+      return ver(b)-ver(a)});
+    const chosen=flash[0]||available[0];
+    if(chosen){_geminiModel=chosen;console.log("[ENGORA AI] Using model:",chosen)}
+    return chosen||null;
+  }catch(e){if(e.status===401||e.status===403)throw e;return null}}
+async function callGemini(key,model,parts,jsonMode=false){
+  const url=`${GEMINI_BASE}/models/${model}:generateContent?key=${key}`;
+  const body={contents:[{parts}]};
+  if(jsonMode)body.generationConfig={responseMimeType:"application/json"};
+  const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok){const e=new Error(d.error?.message||`Gemini error (${r.status})`);e.status=r.status;throw e}
+  const text=d.candidates?.[0]?.content?.parts?.[0]?.text;
+  if(!text)throw new Error("لم يتم إرجاع رد من الذكاء الاصطناعي.");
+  return text}
+async function requestAI(prompt,options={}){
+  const key=getAIKey().trim();
+  if(!key){const e=new Error("لا يوجد مفتاح API.");e.code="not_configured";throw e}
+  const model=await resolveGeminiModel(key);
+  if(!model)throw new Error("لم يتم العثور على أي نموذج Gemini متاح لمفتاحك.");
+  const parts=[{text:prompt}];
+  if(options.images&&options.images.length){
+    for(const img of options.images){const b64=await fileBase64(img);parts.push({inline_data:{mime_type:img.type||"image/jpeg",data:b64}})}}
+  const text=await callGemini(key,model,parts,!!options.jsonResponse);
+  if(options.onText)options.onText({text});
+  return text}
+async function getAI(){
+  const key=getAIKey().trim();if(!key)return null;
+  const sample=async(prompt,opts={})=>({text:await requestAI(prompt,opts)});
+  sample.json=async(prompt,opts={})=>parseAIJSON(await requestAI(prompt,{...opts,jsonResponse:true}));
+  sample.limits=async()=>({images:{maxCount:6}});
+  return sample}
 async function getS(id){const x=await getAI();if(!x)upd(id,AI_SETUP);return x}
+/* ──────────────────────────────────────────────────────────────── */
 const tg=(c,l)=>`<span class="tag ${c}" style="flex:none">${l}</span>`;
 function svHTML(){let h="";if(!SV){setTimeout(()=>{const sd=$("simg-drop"),dd=$("dimg-drop");if(sd)sd.innerHTML=simgHTML();if(dd)dd.innerHTML=dimgHTML()},100)}
   if(!SV)h+=`<p class="sub">اكتب مسألة أو صوّرها، والـ AI يمشّيك خطوة خطوة ومش بيديك الإجابة قبل ما تحاول.</p>
@@ -378,6 +425,8 @@ ${text.slice(0,15000)}`,ims.length?{images:ims}:{});
 document.addEventListener("click",e=>{const g=s=>e.target.closest(s);let x;
   if(x=g("[data-tab]")){tab=x.dataset.tab;render();$("app").scrollTop=0}
   else if(g("#theme")){const r=document.documentElement,d=r.dataset.theme==="dark"||(!r.dataset.theme&&matchMedia("(prefers-color-scheme:dark)").matches);r.dataset.theme=d?"light":"dark";try{localStorage.setItem(THEME_KEY,r.dataset.theme)}catch(e){}}
+  else if(g("#ai-key-btn"))open(`<h2>إعدادات الذكاء الاصطناعي</h2><p style="margin:6px 0 10px;font-size:0.9rem">ادخل مفتاح <b>Gemini API</b> (مجاني):</p><input id="gemini-key-input" type="password" value="${esc(getAIKey())}" placeholder="الصق مفتاح Gemini API هنا"><p style="margin:10px 0;font-size:0.84rem;color:var(--mute)">💡 للحصول على مفتاح <b>Gemini مجاني 100%</b>: افتح <a href="https://aistudio.google.com/app/apikey?.com" target="_blank" rel="noopener noreferrer" style="color:var(--blue);text-decoration:underline">Google AI Studio</a> وأنشئ مفتاحاً بضغطة زر.</p><button class="cta" data-save-gemini-key>حفظ المفتاح</button>`)
+  else if(g("[data-save-gemini-key]")){const k=$("gemini-key-input").value.trim();if(k){try{localStorage.setItem("eos-ai-key",k);localStorage.setItem("eos-gemini-key",k)}catch(e){}close();done("تم الحفظ","تم حفظ مفتاح API بنجاح!")}}
   else if(g("#profile"))open(`<h2>تعديل الاسم</h2><label for="profile-name">الاسم الظاهر</label><input id="profile-name" maxlength="40" value="${esc(S.name)}" placeholder="اكتب اسمك"><button class="cta" data-profile-save>حفظ</button>`)
   else if(g("[data-profile-save]")){const name=$("profile-name").value.trim();if(name){S.name=name;save();render();close()}}
   else if(g("#an"))analyze();
