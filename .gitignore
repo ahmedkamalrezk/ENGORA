@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+node_modules/
+
+# Environment files & API keys (keep private)
+.env
+.env.*
+*.env
+env/
+env.js
+config.js
